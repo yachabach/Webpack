@@ -74,5 +74,47 @@ Note that we are sending our output to bundle.js.  Our index.html references ind
 ### Scripting Webpack
 Adding ```"build": "webpack"``` to the package.json file simplifies calling webpack.  
 ## Asset Modules  
-Webpack will bundle assets and modularize them.  The class is building a function to add the image file.  
-I ran into trouble here because I had type='module' on the script line of the html code.  That caused webpack to treat the files differently.  It sent an error about public path or access to the asset was not allowed.  I supposed this is because it was expecting ECMA modules rather than bundled assets.  
+Asset files can be handled [in accordance with 4 rules](https://webpack.js.org/guides/asset-modules/): 
+- asset/resource  
+- asset/inline  
+- asset  
+- asset/source    
+### asset/resource  
+The asset/resource rule is used for asset files that are part of the package or located in a CDN or other online source. In the class, it is used for .jpg/.png files.  The class builds a function that creates an img element and uses a .jpg file as it's source.  We want to tell webpack how to handle .jpg files.
+```
+    module: {
+        rules: [
+            {
+                test: /\.(png|jpg)$/,
+                type: 'asset/resource'
+            }
+        ]
+    }
+```  
+### asset/inline  
+The asset/inline rule is similar except that it bundles the asset into the bundle.js file.  If that is a .jpg, the file will get VERY large very quickly.  However, every additional file represents an additional http request to bring it to the browser.  So .svg/.ico files would be a good choice for this kind of asset rule.  
+### asset  
+This one makes the decision for us based on file size.  By default, anything over 8kb is handled as asset/resource; anything under 8kb is treated as asset/inline.  The 8kb limit can be modified with:
+```
+    module: {
+        rules: [
+            {
+                test: /\.(png|jpg)$/,
+                type: 'asset',
+                parser: {
+                    dataUrlCondition: {
+                        maxSize: 3 * 1024
+                    }
+                }
+            }
+        ]
+    }
+```
+### asset/source  
+In this exercise, asset/source is similar to inline except that the file is not converted to base64.  It is useful for text files.  We would add a rule to the rules array:
+```
+{
+    test: /\.txt$/,
+    type: 'asset/source'
+}
+```

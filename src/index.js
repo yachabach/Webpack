@@ -1,5 +1,6 @@
-import helloWorld from "./hello-world.js";
+import HelloWorldButton from "./components/helloWorldButton/helloWorldButton.js";
 import addJake from "./addJakeImage.js";
 
-helloWorld();
+const button = HelloWorldButton();
+button.render('Hello World')
 addJake();
