@@ -118,3 +118,18 @@ In this exercise, asset/source is similar to inline except that the file is not 
     type: 'asset/source'
 }
 ```
+## Loaders  
+Webpack allows any file type for which there is a loader.  .js and .jpg and others are already built in.  CSS, for example, is not.  
+### CSS Loaders  
+There are two tasks for bundling css: 
+- translate the file for bundling (css-loader)  
+- inject the resulting styles into the code (style-loader)  
+To accomplish this we install the loaders from npm: ```npm i -D css-loader style-loader```
+We tell webpack how to do this with another rule.  This rule includes a 'use' property for specifying the loader.  
+```
+{
+    test: /\.css$/,
+    use: [style-loader, css-loader]  
+}
+```
+Remember, these loaders are used from back to front.  We have to use the css-loader before the style-loader
