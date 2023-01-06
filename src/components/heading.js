@@ -2,8 +2,6 @@ import './heading.css'
 
 const Heading = () => {
 
-    const Title = '';
-
     const createHeading = (title) => {
         const h1 = document.createElement('h1');
         h1.innerHTML = title;

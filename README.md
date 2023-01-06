@@ -196,4 +196,27 @@ Webpack finds and bundles all the css files into one file that we reference in t
     <script src="./dist/bundle.js"></script>
 </body>
 </html>
+```  
+## Automatic Browser Cache Reload  
+We can automatically update the name of updated files using ```[contenthash]``` in our webpack configuration file: 
 ```
+    output: {
+        filename: 'bundle.[contenthash].js',
+        path: path.resolve(__dirname, './dist'),
+        publicPath: 'dist/'
+    },
+    -
+    -
+    -
+        plugins: [
+        new TerserPlugin(),
+        new MiniCssExtractPlugin({
+            filename: 'styles.[contenthash].css'
+        })
+    ]
+```  
+This option adds files to the dist folder but does not remove them.  We can: 
+- use the clean: true property in the output key  
+- add a plugin called CleanWebpackPlugin  
+
+The second option is more customizable.  The first is simple.  I'll use the first.
