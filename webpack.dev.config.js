@@ -2,9 +2,12 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    entry: './src/index.js',
+    entry: {
+        'index': './src/index.js',
+        'jake': './src/jakePage.js'
+    },
     output: {
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
         path: path.resolve(__dirname, './dist'),
         publicPath: '',
         clean: true
@@ -54,7 +57,18 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
+            filename: 'index.html',
+            chunks: ['index'],
             title: 'Webpack Class',
+            description: 'Basics of Webpack usage.',
+            minify: false
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'jakePage.html',
+            chunks: ['jake'],
+            title: 'Jake Page',
+            description: 'Picture of Awesome Jake and Dad in Dallas',
+            minify: false
         })
     ]
 }

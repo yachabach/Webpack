@@ -227,6 +227,28 @@ Of course there is another plugin for this:
 ```
 npm i -D html-webpack-plugin
 ```  
+The good part of this package: 
+- automatically updates filenames  
+- minifies the file  
+
+The bad part of this package:  
+- resets Title and Description to defaults  
+- minified html files are essentially unreadable  
+
+We can use a configuration object at plugin instantiation to help us with these problems.  
+```
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name].[contenthash].css'
+        }),
+        new HtmlWebpackPlugin({
+            title: 'Webpack Class',
+            description: 'Basics of Webpack usage.',
+            minify: false
+        })
+    ]
+```  
+The course uses handlebars to make the code even more readable but I haven't implemented that yet.  
 ## Production vs. Development  
 Initially in this course, this is all done with the configuration file.  We changed our filename to webpack.dev.config.js, copied it, then renamed the copy to webpack.prod.config.js.  We changed the 'mode' property in each file respectively.   
 
@@ -264,10 +286,57 @@ entry: {
     <name>: <relative filename>,
 }
 ```  
-We also have to allow webpack different names for each file.  We will fix that in the 'output' property.  The updated webpack.dev.config.js file looks like this:  
+We also have to allow webpack different names for each file.  We will fix that in the 'output' property using the [name] variable.  Also, if the multiple files represents multiple page endpoints, we have to tell the htmlWebpackPlugin how to handle those.  We use:
+- 'filename:' to specify the html file to write to 
+- 'chunks:' to specify the js files to associate with the html file
+- chunks are defined implicitly with the entry property  
+
+Chunks can get large with common dependencies.  An optimization called splitChunks allows us to specify which chunks we should split for common dependencies.  
 ```
-entry: {
-    'index': '.'
-}
+    mode: 'production',
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
+    },
+```  
+
+The updated webpack.dev.config.js file looks like this: 
+#### webpack.prod.config.js   
 ```
+module.exports = {
+    entry: {
+        'index': './src/index.js',
+        'jake': './src/jakePage.js'
+    },
+    output: {
+        filename: '[name].[contenthash].js',
+        path: path.resolve(__dirname, './dist'),
+        publicPath: '',
+        clean: true
+    },
+    ,
+    ,
+    ,
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name].[contenthash].css'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            title: 'Webpack Class',
+            chunks: ['index'],
+            description: 'Basics of Webpack usage.',
+            minify: false
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'jakePage.html',
+            title: 'Jake Page',
+            chunks: ['jakePage'],
+            description: 'Picture of Awesome Jake and Dad in Dallas',
+            minify: false
+        })
+    ]    
+```  
+
 

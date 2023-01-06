@@ -14,6 +14,11 @@ module.exports = {
         clean: true
     },
     mode: 'production',
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
+    },
     module: {
         rules: [
             {
@@ -51,7 +56,18 @@ module.exports = {
             filename: '[name].[contenthash].css'
         }),
         new HtmlWebpackPlugin({
+            filename: 'index.html',
+            chunks: ['index'],
             title: 'Webpack Class',
+            description: 'Basics of Webpack usage.',
+            minify: false
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'jakePage.html',
+            chunks: ['jake'],
+            title: 'Jake Page',
+            description: 'Picture of Awesome Jake and Dad in Dallas',
+            minify: false
         })
     ]
 }
