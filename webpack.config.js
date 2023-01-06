@@ -1,4 +1,6 @@
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
     entry: './src/index.js',
@@ -25,8 +27,25 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader']  
+                use: [MiniCssExtractPlugin.loader, 'css-loader']  
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [ '@babel/preset-env'],
+                        plugins: []
+                    }
+                }
             }
         ]
-    }
+    },
+    plugins: [
+        new TerserPlugin(),
+        new MiniCssExtractPlugin({
+            filename: 'styles.css'
+        })
+    ]
 }

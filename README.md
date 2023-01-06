@@ -132,4 +132,68 @@ We tell webpack how to do this with another rule.  This rule includes a 'use' pr
     use: [style-loader, css-loader]  
 }
 ```
-Remember, these loaders are used from back to front.  We have to use the css-loader before the style-loader
+Remember, these loaders are used from back to front.  We have to use the css-loader before the style-loader.  
+### Babel  
+This is also a loader.  Remember, babel takes modern code and 'dumbs it down' for browsers that haven't caught up.  In other words, it takes modern features and builds the same functionality with older code.  Babel requires the following packages: ```npm install @babel/core babel-loader @babel/preset-env```.  It is configured in webpack like this:  
+```
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [ '@babel/preset-env'],
+                        plugins: []
+                    }
+                }
+            }
+```  
+## Plugins  
+Webpack plugins are like loaders except that they can do a lot more than load unique file types.  All of these plugins are imported with the require() function at the top of the file.  
+### Minify the Bundle  
+TerserPlugin is used to minify our javascript file making it faster-loading.  Plugins go in their own webpack config section:
+```
+plugins: [
+    new TerserPlugin()
+]
+```  
+Notice it is an array of calls to instantiate a plugin object.  Normally we would have to install TerserPlugin but now it ships with Webpack 5.  
+
+Even this tiny app realized a huge benefit from this plugin.  Before Terser the bundle was 19kb.  After Terser it was 5kb!  
+### Extract CSS  
+We use another plugin to do this: 
+```
+npm i -D mini-css-extract-plugin
+```  
+We create the instance just as we did with TersePlugin() but we add a configuration object to specify the output file:  
+```
+    plugins: [
+        new TerserPlugin(),
+        new MiniCssExtractPlugin({
+            filename: 'styles.css'
+        })
+    ]
+```  
+We also replace the style-loader with the MiniCssExtractPlugin.loader:  
+```
+            {
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader']  
+            },
+```  
+Webpack finds and bundles all the css files into one file that we reference in the index.html page:
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpack Class</title>
+    <link rel="stylesheet" href="./dist/styles.css">
+</head>
+<body>
+    <script src="./dist/bundle.js"></script>
+</body>
+</html>
+```
