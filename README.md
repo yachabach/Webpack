@@ -219,4 +219,11 @@ This option adds files to the dist folder but does not remove them.  We can:
 - use the clean: true property in the output key  
 - add a plugin called CleanWebpackPlugin  
 
-The second option is more customizable.  The first is simple.  I'll use the first.
+The second option is more customizable.  The first is simple.  I'll use the first.  
+### Keeping up with Filename Changes in index.html  
+Of course there is another plugin for this:
+```
+npm i -D html-webpack-plugin
+```  
+## Production vs. Development  
+Initially in this course, this is all done with the configuration file.  We changed our filename to webpack.dev.config.js, copied it, then renamed the copy to webpack.prod.config.js.  We changed the 'mode' property in each file respectively.   
