@@ -229,8 +229,18 @@ npm i -D html-webpack-plugin
 ```  
 ## Production vs. Development  
 Initially in this course, this is all done with the configuration file.  We changed our filename to webpack.dev.config.js, copied it, then renamed the copy to webpack.prod.config.js.  We changed the 'mode' property in each file respectively.   
+
+All of this allows us to have two different scripts for prod and dev:  
+#### package.json  
+```
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.prod.config.js",
+    "dev": "webpack serve --config webpack.dev.config.js --hot" 
+  },
+```
 ## Webpack Dev Server  
-Here is the magic of hot module replacement (--hot), re-compile on save, and serving with devServer.  
+Here is the magic of hot module replacement (--hot), re-compile on save, and serving (serve) with devServer.  
 ```npm i -D webpack-dev-server```  
 We configure the Webpack dev server in the .dev. config file under the property devServer:  
 ```
@@ -246,4 +256,18 @@ We configure the Webpack dev server in the .dev. config file under the property 
     },
 ```  
 We are forcing the service to port 9000.  The 'static' keyword tells devServer the root directory of the files to serve.  devMiddleware defines the entry html file and forces webpack to write updates to disk, not to memory.  
- 
+## Multiple Files and Code Splitting  
+When we have multiple pages (or entry points), we have to tell webpack about all of them.  We do so in an object that looks like this: 
+```
+entry: {
+    <name>: <relative filename>,
+    <name>: <relative filename>,
+}
+```  
+We also have to allow webpack different names for each file.  We will fix that in the 'output' property.  The updated webpack.dev.config.js file looks like this:  
+```
+entry: {
+    'index': '.'
+}
+```
+
