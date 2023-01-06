@@ -157,9 +157,11 @@ plugins: [
     new TerserPlugin()
 ]
 ```  
-Notice it is an array of calls to instantiate a plugin object.  Normally we would have to install TerserPlugin but now it ships with Webpack 5.  
+Notice that plugins is an array of calls to instantiate a plugin object.  Normally we would have to install TerserPlugin but now it ships with Webpack 5.  
 
 Even this tiny app realized a huge benefit from this plugin.  Before Terser the bundle was 19kb.  After Terser it was 5kb!  
+
+Interestingly, we only use Terser for a production build and webpack automatically uses it.  So when we split the webpack config files into dev and prod, Terser doesn't show up in either.  
 ### Extract CSS  
 We use another plugin to do this: 
 ```
@@ -227,3 +229,21 @@ npm i -D html-webpack-plugin
 ```  
 ## Production vs. Development  
 Initially in this course, this is all done with the configuration file.  We changed our filename to webpack.dev.config.js, copied it, then renamed the copy to webpack.prod.config.js.  We changed the 'mode' property in each file respectively.   
+## Webpack Dev Server  
+Here is the magic of hot module replacement (--hot), re-compile on save, and serving with devServer.  
+```npm i -D webpack-dev-server```  
+We configure the Webpack dev server in the .dev. config file under the property devServer:  
+```
+    devServer: {
+        port: 9000,
+        static: {
+            directory: path.resolve(__dirname, './dist'),
+        },
+        devMiddleware: {
+            index: 'index.html',
+            writeToDisk: true
+        }
+    },
+```  
+We are forcing the service to port 9000.  The 'static' keyword tells devServer the root directory of the files to serve.  devMiddleware defines the entry html file and forces webpack to write updates to disk, not to memory.  
+ 
