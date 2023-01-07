@@ -363,5 +363,68 @@ app.get('/', (req, res) => {
 -
 -
 
+```  
+## Module Federation  
+This architecture allows dynamic code sharing between different code bases at runtime.  The goal is to avoid code duplication.  This is a complicted topic that is [explained here](https://www.syncfusion.com/blogs/post/what-is-webpack-module-federation-and-why-does-it-matter.aspx#:~:text=What%20Is%20Module%20Federation%3F,the%20missing%20dependencies%2C%20if%20any.).  
+
+Module Federation is included in the webpack 5 package but has a unique access path: 
 ```
+const { ModuleFederationPlugin } = require('webpack').container;
+```
+In our example, helloWorld is the remote and helloWorldButton is the component we will share.
+### Configuring helloWorld webpack.configs to provide button  
+  We configure the webpack config file for both development and production by:
+- adding the plugin: 
+```
+        new ModuleFederationPlugin({
+            name: 'HelloWorldApp',
+            filename: 'remoteEntry.js',
+            exposes: {
+                './HelloWorldButton': './src/components/helloWorldButton.js'
+            }
+        })
+```  
+- providing a publicPath for the component to be shared  
+```
+output: {
+    filename: '[name].[contenthash].js',
+    path: path.resolve(__dirname, './dist'),
+    publicPath: 'http://localhost:9001/',
+    clean: true
+    },
+```  
+This also requires us to change the expected path the server uses to access assets: 
+```
+app.use('/', express.static(path.resolve(__dirname, '../dist')));
+
+```  
+### Configuring jake webpack.config to consume button from helloWorld  
+The plugin configuration will be a little different.  Rather than exposing an element, the config specifies the remotes to expect.  
+```
+new ModuleFederationPlugin({
+    name: 'JakeApp',
+    filename: 'remoteEntry.js',
+    remotes: {
+        './HelloWorldApp': 'HelloWorldApp@http://localhost:9001/remoteEntry.js'
+    }
+})
+```  
+### Consuming the Exposed component  
+#### jakePage.js  
+```
+import AddJake from "./components/jakeImage/jakeImage";
+import Heading from "./components/headings/heading";
+
+const heading = Heading().createHeading("Jake's Page");
+AddJake();
+
+//Button loaded dynamically at runtime
+import('HelloWorldApp/HelloWorldButton')
+.then(HelloWorldButtonModule => {
+    const HelloWorldButton = HelloWorldButtonModule.default;
+    HelloWorldButton().render("Jake's Button");
+});
+```  
+
+
 
