@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
     entry: {
@@ -8,7 +9,7 @@ module.exports = {
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/static/',
+        publicPath: 'http://localhost:9001/',
         clean: true
     },
     mode: 'development',
@@ -18,7 +19,7 @@ module.exports = {
             directory: path.resolve(__dirname, './dist'),
         },
         devMiddleware: {
-            index: 'index.html',
+            index: 'helloWorld.html',
             writeToDisk: true
         }
     },
@@ -53,5 +54,12 @@ module.exports = {
             description: 'Basics of Webpack usage.',
             minify: false
         }),
+        new ModuleFederationPlugin({
+            name: 'HelloWorldApp',
+            filename: 'remoteEntry.js',
+            exposes: {
+                './HelloWorldButton': './src/components/helloWorldButton/helloWorldButton.js'
+            }
+        })
     ]
 }

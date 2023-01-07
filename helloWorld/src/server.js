@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const app = express();
 
-app.use('/static', express.static(path.resolve(__dirname, '../dist')));
+app.use('/', express.static(path.resolve(__dirname, '../dist')));
 
 app.get('/', (req, res) => {
     const pathToHtmlFile = path.resolve(__dirname, '../dist/helloWorld.html');

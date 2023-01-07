@@ -1,6 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
     entry: {
@@ -60,6 +61,13 @@ module.exports = {
             title: 'Jake Page',
             description: 'Picture of Awesome Jake and Dad in Dallas',
             minify: false
+        }),
+        new ModuleFederationPlugin({
+            name: 'JakeApp',
+            filename: 'remoteEntry.js',
+            remotes: {
+                HelloWorldApp: 'HelloWorldApp@http://localhost:9001/remoteEntry.js'
+            }
         })
     ]
 }
