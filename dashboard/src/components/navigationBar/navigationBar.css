@@ -1,0 +1,17 @@
+.navigation-bar {
+    display: flex;
+    justify-content: flex-start;
+    margin: none;
+    padding: 8px;
+    gap: 16px;
+    background-color: azure;
+}
+
+a {
+    text-decoration: none;
+    font-size: .75em;
+}
+
+li {
+    list-style: none;
+}

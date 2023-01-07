@@ -1,4 +1,19 @@
+import NavigationBar from './components/navigationBar/navigationBar';
+
 console.log('dashboard is running');
+
+const NavItems = [
+    {
+    url: 'hello-world-page',
+    title: 'Hello World Page'
+    },
+    {
+    url: 'jake-page',
+    title: 'Jake Page'
+    },
+]
+
+NavigationBar().render(NavItems);
 
 const url = window.location.pathname;
 

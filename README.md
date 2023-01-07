@@ -428,7 +428,28 @@ import('HelloWorldApp/HelloWorldButton')
 });
 ```  
 ## Using Federation to Combine Micro Frontends  
-A micro frontend is a small, stand-alone website.  This next exercise combines helloWorld and Jake (each a micro frontend) into a single dashboard site.  The advantage is that we can build and develop each application in isolation.  So the front end needs a function that renders the entire page.
+A micro frontend is a small, stand-alone website.  This next exercise combines helloWorld and Jake (each a micro frontend) into a single dashboard site.  The advantage is that we can build and develop each application in isolation.  
 
+The front end uses a function that renders the entire page.  Then we 'expose' that funciton through the remoteEntry.js file to be used on a host application.  Here is the rendering function for the host application:
+#### dashboard.js  
+```
+console.log('dashboard is running');
 
+const url = window.location.pathname;
+
+if (url === '/hello-world-page') {
+    import('HelloWorldApp/HelloWorldPage')
+    .then(HelloWorldModule => {
+        const HelloWorldPage = HelloWorldModule.default;
+        HelloWorldPage().render();
+    });    
+} else if (url === '/jake-page') {
+    import('JakeApp/JakePage')
+    .then(JakeAppModule => {
+        const JakePage = JakeAppModule.default;
+        JakePage().render();
+    });    
+}
+```
+These applications are dynamically loaded only when needed.
 
