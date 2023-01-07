@@ -4,12 +4,12 @@ const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
     entry: {
-        'jake': './src/jakePage.js'
+        'jake': './src/jake.js'
     },
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/',
+        publicPath: 'http://localhost:9002/',
         clean: true
     },
     mode: 'development',
@@ -19,7 +19,7 @@ module.exports = {
             directory: path.resolve(__dirname, './dist'),
         },
         devMiddleware: {
-            index: 'jakePage.html',
+            index: 'jake.html',
             writeToDisk: true
         }
     },
@@ -57,7 +57,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            filename: 'jakePage.html',
+            filename: 'jake.html',
             // chunks: ['jake'],
             title: 'Jake Page',
             description: 'Picture of Awesome Jake and Dad in Dallas',
@@ -66,8 +66,8 @@ module.exports = {
         new ModuleFederationPlugin({
             name: 'JakeApp',
             filename: 'remoteEntry.js',
-            remotes: {
-                HelloWorldApp: 'HelloWorldApp@http://localhost:9001/remoteEntry.js'
+            exposes: {
+                './JakePage': './src/components/jakePage.js',
             }
         })
     ]

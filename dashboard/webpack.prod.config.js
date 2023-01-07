@@ -5,12 +5,12 @@ const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
     entry: {
-        'jake': './src/jake.js'
+        'dashboard': './src/dashboard.js'
     },
     output: {
         filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9002/',
+        publicPath: 'http://localhost:9000/',
         clean: true
     },
     mode: 'production',
@@ -56,17 +56,17 @@ module.exports = {
             filename: '[name].[contenthash].css'
         }),
         new HtmlWebpackPlugin({
-            filename: 'jake.html',
+            filename: 'dashboard.html',
             // chunks: ['jake'],
-            title: 'Jake Page',
-            description: 'Picture of Awesome Jake and Dad in Dallas',
+            title: 'Webpack Class',
+            description: 'Dashboard containing two dynamically imported applications',
             minify: false
         }),
         new ModuleFederationPlugin({
-            name: 'JakeApp',
-            filename: 'remoteEntry.js',
-            exposes: {
-                './JakePage': './src/components/jakePage.js',
+            name: 'DashboardApp',
+            remotes: {
+                HelloWorldApp: 'HelloWorldApp@http://localhost:9001/remoteEntry.js',
+                JakeApp: 'JakeApp@http://localhost:9002/remoteEntry.js',
             }
         })
     ]

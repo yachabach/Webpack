@@ -393,11 +393,13 @@ output: {
     clean: true
     },
 ```  
-This also requires us to change the expected path the server uses to access assets: 
+- set the expected path the server uses to access assets to the root: 
 ```
 app.use('/', express.static(path.resolve(__dirname, '../dist')));
 
 ```  
+ModuleFederationPlugin creates a .js file named ```filename: 'remoteEntry.js'``` containing the code that is provided to consumers.  
+
 ### Configuring jake webpack.config to consume button from helloWorld  
 The plugin configuration will be a little different.  Rather than exposing an element, the config specifies the remotes to expect.  
 ```
@@ -425,6 +427,8 @@ import('HelloWorldApp/HelloWorldButton')
     HelloWorldButton().render("Jake's Button");
 });
 ```  
+## Using Federation to Combine Micro Frontends  
+A micro frontend is a small, stand-alone website.  This next exercise combines helloWorld and Jake (each a micro frontend) into a single dashboard site.  The advantage is that we can build and develop each application in isolation.  So the front end needs a function that renders the entire page.
 
 
 

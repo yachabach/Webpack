@@ -6,12 +6,12 @@ const app = express();
 
 app.use('/', express.static(path.resolve(__dirname, '../dist')));
 
-app.get('/', (req, res) => {
-    const pathToHtmlFile = path.resolve(__dirname, '../dist/jake.html');
+app.get('*', (req, res) => {
+    const pathToHtmlFile = path.resolve(__dirname, '../dist/dashboard.html');
     const contentFromHtmlFile = fs.readFileSync(pathToHtmlFile, 'utf-8');
     res.send(contentFromHtmlFile);
 });
 
-app.listen(9002, () => {
-    console.log('Application is running on http://localhost:9002/')
+app.listen(9000, () => {
+    console.log('Application is running on http://localhost:9000/')
 })

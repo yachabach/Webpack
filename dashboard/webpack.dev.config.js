@@ -4,27 +4,39 @@ const { ModuleFederationPlugin } = require('webpack').container;
 
 module.exports = {
     entry: {
-        'hello-world': './src/helloWorld.js',
+        'dashboard': './src/dashboard.js'
     },
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9001/',
+        publicPath: 'http://localhost:9000/',
         clean: true
     },
     mode: 'development',
     devServer: {
-        port: 9001,
+        port: 9000,
         static: {
             directory: path.resolve(__dirname, './dist'),
         },
         devMiddleware: {
-            index: 'helloWorld.html',
-            writeToDisk: false
+            index: 'dashboard.html',
+            writeToDisk: true
+        },
+        historyApiFallback: {
+            index: 'dashboard.html'
         }
     },
     module: {
         rules: [
+            {
+                test: /\.(png|jpg)$/,
+                type: 'asset',
+                parser: {
+                    dataUrlCondition: {
+                        maxSize: 3 * 1024
+                    }
+                }
+            },
             {
                 test: /\.txt$/,
                 type: 'asset/source'
@@ -48,18 +60,17 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            filename: 'helloWorld.html',
-            // chunks: ['hello-world'],
-            title: 'Hello World App',
-            description: 'Hello World Micro Application with provided button code.',
+            filename: 'dashboard.html',
+            // chunks: ['jake'],
+            title: 'Webpack Class',
+            description: 'Dashboard containing two dynamically imported applications',
             minify: false
         }),
         new ModuleFederationPlugin({
-            name: 'HelloWorldApp',
-            filename: 'remoteEntry.js',
-            exposes: {
-                './HelloWorldButton': './src/components/helloWorldButton/helloWorldButton.js',
-                './HelloWorldPage': './src/components/helloWorldPage.js'
+            name: 'DashboardApp',
+            remotes: {
+                HelloWorldApp: 'HelloWorldApp@http://localhost:9001/remoteEntry.js',
+                JakeApp: 'JakeApp@http://localhost:9002/remoteEntry.js',
             }
         })
     ]
