@@ -338,5 +338,30 @@ module.exports = {
         })
     ]    
 ```  
+## Integrating Express  
+Remember, our pages are not hard-coded.  They are built with javascript and css.  Our initial express solution sent an html file with no visible content.  The embeded script files are considered 'static' files and are sent separately with each request.  So we have to let webpack know that's what we want to do - preface files in our dist folder with '/static/'.  We do that with the publicPath:
+```
+    output: {
+        filename: '[name].[contenthash].js',
+        path: path.resolve(__dirname, './dist'),
+        publicPath: '/static/',
+        clean: true
+    },
+```  
+We also tell express where the static files live: 
+#### server.js  
+```
+-
+-
+app.use('/static', express.static(path.resolve(__dirname, '../dist')));
 
+app.get('/', (req, res) => {
+    const pathToHtmlFile = path.resolve(__dirname, '../dist/index.html');
+    const contentFromHtmlFile = fs.readFileSync(pathToHtmlFile, 'utf-8');
+    res.send(contentFromHtmlFile);
+});
+-
+-
+
+```
 

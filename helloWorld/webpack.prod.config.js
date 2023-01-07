@@ -4,13 +4,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
     entry: {
-        'index': './src/index.js',
-        'jake': './src/jakePage.js'
+        'hello-world': './src/helloWorld.js',
     },
     output: {
         filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: '',
+        publicPath: '/static/',
         clean: true
     },
     mode: 'production',
@@ -21,15 +20,6 @@ module.exports = {
     },
     module: {
         rules: [
-            {
-                test: /\.(png|jpg)$/,
-                type: 'asset',
-                parser: {
-                    dataUrlCondition: {
-                        maxSize: 3 * 1024
-                    }
-                }
-            },
             {
                 test: /\.txt$/,
                 type: 'asset/source'
@@ -56,18 +46,11 @@ module.exports = {
             filename: '[name].[contenthash].css'
         }),
         new HtmlWebpackPlugin({
-            filename: 'index.html',
-            chunks: ['index'],
+            filename: 'helloWorld.html',
+            // chunks: ['hello-world'],
             title: 'Webpack Class',
             description: 'Basics of Webpack usage.',
             minify: false
         }),
-        new HtmlWebpackPlugin({
-            filename: 'jakePage.html',
-            chunks: ['jake'],
-            title: 'Jake Page',
-            description: 'Picture of Awesome Jake and Dad in Dallas',
-            minify: false
-        })
     ]
 }
